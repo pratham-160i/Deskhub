@@ -9,12 +9,12 @@ This repo is set up so **`node_modules` is not part of Git**. Dependencies are r
 From this folder in a terminal:
 
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/Deskhub.git
+git remote add origin https://github.com/pratham-160i/Deskhub.git
 git branch -M main
 git push -u origin main
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username. After the first push, use normal `git add`, `git commit`, and `git push` — still no `node_modules` in the repo.
+If `origin` already exists, skip `git remote add`. After the first push, use normal `git add`, `git commit`, and `git push` — still no `node_modules` in the repo.
 
 ## Run locally
 
