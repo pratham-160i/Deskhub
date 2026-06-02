@@ -1,0 +1,27 @@
+# Dependencies (reinstall with: npm install)
+node_modules/
+
+# Logs and runtime
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Optional build output (add more if you add a bundler)
+dist/
+build/
+.cache/

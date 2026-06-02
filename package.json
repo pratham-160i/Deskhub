@@ -1,0 +1,16 @@
+{
+  "name": "deskhub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"node server/index.js\" \"serve public -l 3055\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "serve": "^14.2.4"
+  }
+}
