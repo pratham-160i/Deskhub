@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n api,web -c blue,green \"node server/index.js\" \"serve public -l 3055\""
+    "dev": "concurrently -n api,web -c blue,green \"node server/index.js\" \"serve . -l 3055\""
   },
   "dependencies": {
     "cors": "^2.8.5",

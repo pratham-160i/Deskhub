@@ -16,6 +16,16 @@ git push -u origin main
 
 If `origin` already exists, skip `git remote add`. After the first push, use normal `git add`, `git commit`, and `git push` — still no `node_modules` in the repo.
 
+## GitHub Pages URL
+
+The login page is **`index.html` at the repository root**, so a project site looks like:
+
+`https://<your-username>.github.io/<RepositoryName>/`
+
+(Example: `https://vaseem369.github.io/DeskHub/` — match your repo name’s casing in the URL.)
+
+In the repo **Settings → Pages**, set the source to your branch (usually `main`) and **folder `/ (root)`**. Static assets stay under `public/`.
+
 ## Run locally
 
 ```bash
@@ -25,4 +35,4 @@ npm run dev
 
 ## If you must use the website upload
 
-Only select these paths (not `node_modules`): `.gitignore`, `package.json`, `package-lock.json`, `README.md`, `public/`, `server/`. That stays under GitHub’s per-upload limit.
+Only select these paths (not `node_modules`): `.gitignore`, `package.json`, `package-lock.json`, `README.md`, `index.html`, `public/`, `server/`. That stays under GitHub’s per-upload limit.

@@ -18,12 +18,12 @@
   <body>
     <h1>Dashboard</h1>
     <p>You are signed in.</p>
-    <p><a href="./index.html">Back to login</a></p>
+    <p><a href="../index.html">Back to login</a></p>
     <script type="module">
       import * as storage from "./utils/storage.js";
       const raw = storage.get("user");
       if (!storage.get("token")) {
-        window.location.replace("./index.html");
+        window.location.replace("../index.html");
       } else if (raw) {
         try {
           const user = JSON.parse(raw);

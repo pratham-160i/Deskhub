@@ -16,7 +16,7 @@ function clearError() {
 }
 
 if (auth.isAuthenticated()) {
-  window.location.replace("./dashboard.html");
+  window.location.replace("public/dashboard.html");
 }
 
 if (form) {
@@ -33,7 +33,7 @@ if (form) {
 
     try {
       await auth.login({ username, password });
-      window.location.assign("./dashboard.html");
+      window.location.assign("public/dashboard.html");
     } catch (err) {
       const msg =
         err && typeof err.message === "string"
