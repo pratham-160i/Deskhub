@@ -77,6 +77,54 @@ export async function refresh() {
   }
 }
 
+export function initRaiseTicketForm() {
+  const toggle = document.getElementById("btn-raise-toggle");
+  const panel = document.getElementById("raise-panel");
+  const form = document.getElementById("raise-form");
+  const cancel = document.getElementById("raise-cancel");
+  if (!toggle || !panel || !form) return;
+
+  const hide = () => {
+    panel.hidden = true;
+    form.reset();
+  };
+
+  toggle.addEventListener("click", () => {
+    panel.hidden = !panel.hidden;
+  });
+  cancel?.addEventListener("click", hide);
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const titleEl = /** @type {HTMLInputElement | null} */ (
+      form.querySelector('[name="title"]')
+    );
+    const customerEl = /** @type {HTMLInputElement | null} */ (
+      form.querySelector('[name="customer"]')
+    );
+    const title = (titleEl?.value ?? "").trim();
+    const customer = (customerEl?.value ?? "").trim();
+    const priority =
+      /** @type {HTMLSelectElement} */ (form.querySelector('[name="priority"]'))
+        ?.value || "medium";
+    const status =
+      /** @type {HTMLSelectElement} */ (form.querySelector('[name="status"]'))
+        ?.value || "open";
+    if (!title || !customer) return;
+    try {
+      await api.createTicket({ title, customer, priority, status });
+      hide();
+      await refresh();
+    } catch (err) {
+      const msg =
+        err && typeof err === "object" && "message" in err
+          ? String(/** @type {{ message?: string }} */ (err).message)
+          : "Could not create ticket.";
+      window.alert(msg);
+    }
+  });
+}
+
 export function initTicketsList() {
   if (!storage.get("token")) {
     location.replace("./index.html");
@@ -85,5 +133,6 @@ export function initTicketsList() {
   document.getElementById("retry")?.addEventListener("click", () => {
     void refresh();
   });
+  initRaiseTicketForm();
   void refresh();
 }

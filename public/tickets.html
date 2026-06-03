@@ -3,90 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tickets — Deskhub</title>
-    <style>
-      body {
-        font-family: system-ui, sans-serif;
-        margin: 1rem;
-      }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 60rem;
-      }
-      th,
-      td {
-        border: 1px solid #ccc;
-        padding: 0.35rem 0.5rem;
-        text-align: left;
-      }
-      th {
-        background: #f0f0f0;
-      }
-      #loading {
-        padding: 1rem;
-      }
-      #error {
-        background: #ffe0e0;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        max-width: 40rem;
-      }
-      #empty {
-        padding: 1rem;
-        border: 1px dashed #999;
-        max-width: 40rem;
-      }
-      nav {
-        margin-bottom: 1rem;
-      }
-    </style>
+    <title>Redirect…</title>
+    <script>
+      location.replace("./dashboard.html");
+    </script>
+    <meta http-equiv="refresh" content="0;url=dashboard.html" />
   </head>
   <body>
-    <nav>
-      <a href="./dashboard.html">Dashboard</a>
-      ·
-      <a href="./index.html" id="nav-out">Sign out</a>
-    </nav>
-    <h1>Tickets</h1>
-
-    <div id="loading" hidden>Loading…</div>
-
-    <div id="error" hidden>
-      <p id="error-msg"></p>
-      <button type="button" id="retry">Retry</button>
-    </div>
-
-    <div id="empty" hidden>No tickets found</div>
-
-    <div id="table-wrap" hidden>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Customer</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Assignee</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody id="ticket-rows"></tbody>
-      </table>
-    </div>
-
-    <script type="module">
-      import * as auth from "./api/auth.js";
-      import { initTicketsList } from "./modules/tickets.js";
-
-      document.getElementById("nav-out")?.addEventListener("click", async (e) => {
-        e.preventDefault();
-        await auth.logout();
-        location.assign("./index.html");
-      });
-
-      initTicketsList();
-    </script>
+    <p><a href="./dashboard.html">Open Deskhub</a></p>
   </body>
 </html>

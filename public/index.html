@@ -5,62 +5,206 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sign in — Deskhub</title>
     <style>
+      :root {
+        --bg1: #e8eef5;
+        --bg2: #f0f4fa;
+        --card: #ffffff;
+        --text: #1a2332;
+        --muted: #5c6b7d;
+        --border: #d0dae6;
+        --accent: #1565c0;
+        --accent-hover: #0d47a1;
+        --danger: #c62828;
+        --shadow: 0 12px 40px rgba(26, 35, 50, 0.12);
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg1: #0f1419;
+          --bg2: #151d28;
+          --card: #1a2332;
+          --text: #e8eef5;
+          --muted: #9aa8bc;
+          --border: #2d3a4d;
+          --accent: #42a5f5;
+          --accent-hover: #64b5f6;
+          --danger: #ef9a9a;
+          --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
       body {
-        font-family: system-ui, sans-serif;
-        max-width: 22rem;
-        margin: 3rem auto;
-        padding: 0 1rem;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(1rem, 4vw, 2rem);
+        line-height: 1.5;
+        color: var(--text);
+        background: linear-gradient(155deg, var(--bg1) 0%, var(--bg2) 45%, #dfe8f2 100%);
       }
-      h1 {
-        font-size: 1.25rem;
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: linear-gradient(155deg, var(--bg1) 0%, var(--bg2) 50%, #0a0e14 100%);
+        }
       }
+
+      .login-shell {
+        width: 100%;
+        max-width: 24rem;
+      }
+
+      .login-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        padding: clamp(1.5rem, 4vw, 2rem);
+      }
+
+      .login-card__head {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .login-card__head h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 1.75rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .login-card__sub {
+        margin: 0.35rem 0 0;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .login-card__badge {
+        display: inline-block;
+        margin-top: 0.75rem;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 12%, transparent);
+        border-radius: 999px;
+      }
+
       label {
         display: block;
-        margin-top: 0.75rem;
-        font-size: 0.875rem;
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--muted);
       }
+      label:first-of-type {
+        margin-top: 0;
+      }
+
       input {
         width: 100%;
-        box-sizing: border-box;
-        margin-top: 0.25rem;
-        padding: 0.4rem;
+        margin-top: 0.35rem;
+        padding: 0.65rem 0.75rem;
+        font: inherit;
+        color: inherit;
+        background: color-mix(in srgb, var(--card) 92%, var(--text));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        transition: border-color 0.15s, box-shadow 0.15s;
       }
-      button {
-        margin-top: 1rem;
+      input::placeholder {
+        color: var(--muted);
+        opacity: 0.7;
+      }
+      input:hover {
+        border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+      }
+
+      button[type="submit"] {
+        margin-top: 1.35rem;
         width: 100%;
-        padding: 0.5rem;
+        padding: 0.7rem 1rem;
+        font: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: background 0.15s, transform 0.1s;
       }
+      button[type="submit"]:hover {
+        background: var(--accent-hover);
+      }
+      button[type="submit"]:active {
+        transform: scale(0.98);
+      }
+      button[type="submit"]:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
       .err {
-        color: #b00020;
-        margin-top: 0.75rem;
+        margin: 0 0 0.75rem;
+        padding: 0.55rem 0.65rem;
+        font-size: 0.875rem;
+        color: var(--danger);
+        background: color-mix(in srgb, var(--danger) 12%, transparent);
+        border-radius: var(--radius-sm);
+        border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
         min-height: 1.25em;
       }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Deskhub</h1>
-      <p>Sign in</p>
-      <form id="login-form" method="post" action="#" novalidate>
-        <p id="login-error" class="err" role="alert" hidden></p>
-        <label for="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="username"
-          required
-        />
-        <label for="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autocomplete="current-password"
-          required
-        />
-        <button type="submit" id="login-submit">Sign in</button>
-      </form>
+    <main class="login-shell">
+      <div class="login-card">
+        <header class="login-card__head">
+          <h1>Deskhub</h1>
+          <p class="login-card__sub">Sign in to your account</p>
+          <span class="login-card__badge">Secure</span>
+        </header>
+        <form id="login-form" method="post" action="#" novalidate>
+          <p id="login-error" class="err" role="alert" hidden></p>
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="username"
+            placeholder="you@company.com"
+            required
+          />
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            required
+          />
+          <button type="submit" id="login-submit">Sign in</button>
+        </form>
+      </div>
     </main>
     <script type="module" src="./modules/auth.js"></script>
   </body>
