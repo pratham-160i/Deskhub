@@ -1,10 +1,10 @@
-const dateFmt = new Intl.DateTimeFormat(undefined, {
+const dOnly = new Intl.DateTimeFormat(undefined, {
   year: "numeric",
   month: "short",
   day: "numeric",
 });
 
-const dateTimeFmt = new Intl.DateTimeFormat(undefined, {
+const dTime = new Intl.DateTimeFormat(undefined, {
   year: "numeric",
   month: "short",
   day: "numeric",
@@ -12,60 +12,29 @@ const dateTimeFmt = new Intl.DateTimeFormat(undefined, {
   minute: "2-digit",
 });
 
-/**
- * @param {string | number | Date | null | undefined} value
- * @returns {string}
- */
-export function formatDate(value) {
-  const d = toDate(value);
-  if (!d) return "—";
-  return dateFmt.format(d);
-}
-
-/**
- * @param {string | number | Date | null | undefined} value
- * @returns {string}
- */
-export function formatDateTime(value) {
-  const d = toDate(value);
-  if (!d) return "—";
-  return dateTimeFmt.format(d);
-}
-
-/**
- * @param {string | number | Date | null | undefined} value
- * @returns {string}
- */
-export function formatRelative(value) {
-  const d = toDate(value);
-  if (!d) return "—";
-  const sec = Math.round((Date.now() - d.getTime()) / 1000);
-  if (sec < 45) return "just now";
-  if (sec < 3600) {
-    const m = Math.floor(sec / 60);
-    return `${m} min ago`;
-  }
-  if (sec < 86400) {
-    const h = Math.floor(sec / 3600);
-    return `${h} hour${h === 1 ? "" : "s"} ago`;
-  }
-  if (sec < 604800) {
-    const days = Math.floor(sec / 86400);
-    return `${days} day${days === 1 ? "" : "s"} ago`;
-  }
-  if (sec < 2592000) {
-    const w = Math.floor(sec / 604800);
-    return `${w} week${w === 1 ? "" : "s"} ago`;
-  }
-  return formatDate(d);
-}
-
-/**
- * @param {string | number | Date | null | undefined} value
- * @returns {Date | null}
- */
-function toDate(value) {
-  if (value == null) return null;
-  const d = value instanceof Date ? value : new Date(value);
+/** @param {string|number|Date|null|undefined} v */
+function toDate(v) {
+  if (v == null) return null;
+  const d = v instanceof Date ? v : new Date(v);
   return Number.isNaN(d.getTime()) ? null : d;
+}
+
+export function formatDate(v) {
+  const d = toDate(v);
+  return d ? dOnly.format(d) : "—";
+}
+
+export function formatDateTime(v) {
+  const d = toDate(v);
+  return d ? dTime.format(d) : "—";
+}
+
+export function formatRelative(v) {
+  const d = toDate(v);
+  if (!d) return "—";
+  const s = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (s < 60) return "just now";
+  if (s < 3600) return Math.floor(s / 60) + " min ago";
+  if (s < 86400) return Math.floor(s / 3600) + " h ago";
+  return Math.floor(s / 86400) + " d ago";
 }

@@ -5,16 +5,9 @@ const { createTicketsRouter } = require("./tickets");
 
 const PORT = process.env.PORT || 3040;
 const app = express();
-
-/** In-memory sessions for local dev */
 const sessions = new Map();
 
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 function bearerToken(req) {
@@ -23,38 +16,20 @@ function bearerToken(req) {
   return h.slice(7).trim();
 }
 
-/** Demo credentials — change in production */
-const VALID = {
-  email: "pratham.bankar@g10x.com",
-  password: "PrathamBankar@1604",
-};
+/** Demo only — replace for production */
+const VALID_EMAIL = "priya@deskhub.in";
+const VALID_PASSWORD = "demo123";
 
 app.post("/api/auth/login", (req, res) => {
-  const body = req.body || {};
-  const password = typeof body.password === "string" ? body.password : "";
-  const emailRaw =
-    typeof body.email === "string"
-      ? body.email.trim()
-      : typeof body.username === "string"
-        ? body.username.trim()
-        : "";
-  const email = emailRaw.toLowerCase();
-  if (
-    !email ||
-    typeof password !== "string" ||
-    email !== VALID.email.toLowerCase() ||
-    password !== VALID.password
-  ) {
+  const email = (req.body?.email || "").trim().toLowerCase();
+  const password = (req.body?.password || "").trim();
+  if (email !== VALID_EMAIL || password !== VALID_PASSWORD) {
     return res.status(401).json({ message: "Invalid email or password." });
   }
-  const token = crypto.randomBytes(32).toString("hex");
-  const user = {
-    id: "1",
-    email: VALID.email,
-    username: VALID.email.split("@")[0] || "User",
-  };
+  const token = crypto.randomBytes(24).toString("hex");
+  const user = { id: "1", email: VALID_EMAIL, name: "Priya" };
   sessions.set(token, user);
-  return res.json({ token, user });
+  res.json({ token, user });
 });
 
 app.get("/api/auth/me", (req, res) => {
@@ -62,17 +37,17 @@ app.get("/api/auth/me", (req, res) => {
   if (!token || !sessions.has(token)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  return res.json({ user: sessions.get(token) });
+  res.json({ user: sessions.get(token) });
 });
 
 app.post("/api/auth/logout", (req, res) => {
   const token = bearerToken(req);
   if (token) sessions.delete(token);
-  return res.status(204).send();
+  res.status(204).end();
 });
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "api" });
+  res.json({ ok: true });
 });
 
 function requireAuth(req, res, next) {
@@ -87,5 +62,5 @@ function requireAuth(req, res, next) {
 app.use("/api/tickets", createTicketsRouter({ requireAuth }));
 
 app.listen(PORT, () => {
-  console.log(`API listening on http://localhost:${PORT}`);
+  console.log(`API http://localhost:${PORT}`);
 });

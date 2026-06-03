@@ -5,398 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tickets — Deskhub</title>
     <style>
-      :root {
-        color-scheme: light dark;
-        --bg: #f4f6f9;
-        --panel: #ffffff;
-        --border: #d5dde8;
-        --text: #111827;
-        --muted: #5b6472;
-        --accent: #2563eb;
-        --danger: #b91c1c;
-        --radius: 10px;
-        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #0f1419;
-          --panel: #1a2332;
-          --border: #2d3a4d;
-          --text: #e8eef5;
-          --muted: #9aa8bc;
-          --accent: #3b82f6;
-          --danger: #fca5a5;
-        }
-      }
-      * {
-        box-sizing: border-box;
-      }
       body {
-        margin: 0;
-        min-height: 100vh;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.5;
-      }
-      header {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-        background: var(--panel);
-      }
-      header h1 {
-        margin: 0;
-        font-size: 1.25rem;
-      }
-      header nav a {
-        color: var(--accent);
-        text-decoration: none;
-        font-weight: 600;
-      }
-      header nav a:hover {
-        text-decoration: underline;
-      }
-      .wrap {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 1.25rem 1.5rem 2rem;
-      }
-      .toolbar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        align-items: flex-end;
-        margin-bottom: 1rem;
-        padding: 1rem;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-      }
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-        min-width: 0;
-      }
-      .field label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-      }
-      .field input,
-      .field select {
-        min-height: 2.25rem;
-        padding: 0.35rem 0.5rem;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        background: transparent;
-        color: inherit;
-        font: inherit;
-      }
-      .field-grow {
-        flex: 1 1 200px;
-      }
-      .pager {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 1rem;
-      }
-      .pager button {
-        padding: 0.45rem 0.85rem;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        background: var(--panel);
-        color: inherit;
-        font: inherit;
-        cursor: pointer;
-      }
-      .pager button:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-      }
-      .pager span {
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-      #tickets-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-        padding: 2rem;
-        color: var(--muted);
-      }
-      #tickets-loading[hidden] {
-        display: none !important;
-      }
-      .spinner {
-        width: 1.75rem;
-        height: 1.75rem;
-        border-radius: 50%;
-        border: 3px solid var(--border);
-        border-top-color: var(--accent);
-        animation: spin 0.75s linear infinite;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      #tickets-error {
-        padding: 1rem 1.25rem;
-        border-radius: var(--radius);
-        border: 1px solid var(--danger);
-        background: color-mix(in srgb, var(--danger) 12%, var(--panel));
-        color: var(--text);
-        margin-bottom: 1rem;
-      }
-      #tickets-error[hidden] {
-        display: none !important;
-      }
-      #tickets-error .row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.75rem;
-        justify-content: space-between;
-      }
-      #tickets-retry {
-        padding: 0.45rem 0.9rem;
-        border-radius: 6px;
-        border: 0;
-        background: var(--accent);
-        color: #fff;
-        font: inherit;
-        font-weight: 600;
-        cursor: pointer;
-      }
-      #tickets-empty {
-        padding: 2.5rem 1rem;
-        text-align: center;
-        color: var(--muted);
-        border: 1px dashed var(--border);
-        border-radius: var(--radius);
-        background: var(--panel);
-      }
-      #tickets-empty[hidden] {
-        display: none !important;
-      }
-      #tickets-table-wrap {
-        overflow-x: auto;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: var(--panel);
-      }
-      #tickets-table-wrap[hidden] {
-        display: none !important;
+        font-family: system-ui, sans-serif;
+        margin: 1rem;
       }
       table {
-        width: 100%;
         border-collapse: collapse;
-        font-size: 0.92rem;
+        width: 100%;
+        max-width: 60rem;
       }
-      thead th {
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 0.35rem 0.5rem;
         text-align: left;
-        padding: 0.65rem 0.75rem;
-        border-bottom: 1px solid var(--border);
-        color: var(--muted);
-        font-weight: 600;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        white-space: nowrap;
       }
-      tbody td {
-        padding: 0.65rem 0.75rem;
-        border-bottom: 1px solid var(--border);
-        vertical-align: top;
+      th {
+        background: #f0f0f0;
       }
-      tbody tr:last-child td {
-        border-bottom: 0;
+      #loading {
+        padding: 1rem;
       }
-      tbody tr:hover td {
-        background: color-mix(in srgb, var(--accent) 6%, transparent);
+      #error {
+        background: #ffe0e0;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        max-width: 40rem;
       }
-      .num {
-        font-variant-numeric: tabular-nums;
-        width: 3rem;
+      #empty {
+        padding: 1rem;
+        border: 1px dashed #999;
+        max-width: 40rem;
       }
-      .muted {
-        color: var(--muted);
-      }
-      .small {
-        font-size: 0.8rem;
-      }
-      .badge {
-        display: inline-block;
-        padding: 0.15rem 0.45rem;
-        border-radius: 999px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        text-transform: capitalize;
-      }
-      .pri-low {
-        background: #dbeafe;
-        color: #1e40af;
-      }
-      .pri-medium {
-        background: #fef3c7;
-        color: #92400e;
-      }
-      .pri-high {
-        background: #ffedd5;
-        color: #9a3412;
-      }
-      .pri-critical {
-        background: #fee2e2;
-        color: #991b1b;
-      }
-      @media (prefers-color-scheme: dark) {
-        .pri-low {
-          background: #1e3a5f;
-          color: #bfdbfe;
-        }
-        .pri-medium {
-          background: #422006;
-          color: #fcd34d;
-        }
-        .pri-high {
-          background: #431407;
-          color: #fdba74;
-        }
-        .pri-critical {
-          background: #450a0a;
-          color: #fecaca;
-        }
-      }
-      .status-pill {
-        background: color-mix(in srgb, var(--muted) 18%, transparent);
-        color: var(--text);
-        text-transform: none;
-        font-weight: 500;
+      nav {
+        margin-bottom: 1rem;
       }
     </style>
   </head>
   <body>
-    <header>
-      <h1>Tickets</h1>
-      <nav>
-        <a href="./dashboard.html">Dashboard</a>
-        ·
-        <a href="./index.html" id="tickets-sign-out">Sign out</a>
-      </nav>
-    </header>
-    <div class="wrap">
-      <div class="toolbar" role="search" aria-label="Ticket filters">
-        <div class="field field-grow">
-          <label for="tickets-search">Search</label>
-          <input
-            id="tickets-search"
-            type="search"
-            placeholder="Title or customer…"
-            autocomplete="off"
-          />
-        </div>
-        <div class="field">
-          <label for="tickets-filter-status">Status</label>
-          <select id="tickets-filter-status">
-            <option value="">All</option>
-            <option value="open">Open</option>
-            <option value="in progress">In progress</option>
-            <option value="resolved">Resolved</option>
-            <option value="closed">Closed</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="tickets-filter-priority">Priority</label>
-          <select id="tickets-filter-priority">
-            <option value="">All</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="tickets-sort">Sort by</label>
-          <select id="tickets-sort">
-            <option value="createdAt">Created</option>
-            <option value="id">ID</option>
-            <option value="title">Title</option>
-            <option value="customer">Customer</option>
-            <option value="priority">Priority</option>
-            <option value="status">Status</option>
-            <option value="assignee">Assignee</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="tickets-order">Order</label>
-          <select id="tickets-order">
-            <option value="desc">Newest first</option>
-            <option value="asc">Oldest first</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="tickets-page-size">Per page</label>
-          <select id="tickets-page-size">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30" selected>30</option>
-          </select>
-        </div>
-      </div>
+    <nav>
+      <a href="./dashboard.html">Dashboard</a>
+      ·
+      <a href="./index.html" id="nav-out">Sign out</a>
+    </nav>
+    <h1>Tickets</h1>
 
-      <div id="tickets-loading" hidden>
-        <div class="spinner" aria-hidden="true"></div>
-        <span>Loading tickets…</span>
-      </div>
+    <div id="loading" hidden>Loading…</div>
 
-      <div id="tickets-error" hidden>
-        <div class="row">
-          <p id="tickets-error-message" style="margin: 0; flex: 1"></p>
-          <button type="button" id="tickets-retry">Retry</button>
-        </div>
-      </div>
+    <div id="error" hidden>
+      <p id="error-msg"></p>
+      <button type="button" id="retry">Retry</button>
+    </div>
 
-      <div id="tickets-empty" hidden>
-        <strong>No tickets found</strong>
-        <p style="margin: 0.5rem 0 0">Try clearing search or filters, or change the page size.</p>
-      </div>
+    <div id="empty" hidden>No tickets found</div>
 
-      <div id="tickets-table-wrap" hidden>
-        <table id="tickets-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Customer</th>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>Assignee</th>
-              <th>Created</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div class="pager">
-        <button type="button" id="tickets-prev">Previous</button>
-        <button type="button" id="tickets-next">Next</button>
-        <span id="tickets-page-info"></span>
-      </div>
+    <div id="table-wrap" hidden>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Customer</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Assignee</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="ticket-rows"></tbody>
+      </table>
     </div>
 
     <script type="module">
+      import * as auth from "./api/auth.js";
       import { initTicketsList } from "./modules/tickets.js";
+
+      document.getElementById("nav-out")?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await auth.logout();
+        location.assign("./index.html");
+      });
+
       initTicketsList();
     </script>
   </body>

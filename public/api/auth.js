@@ -1,19 +1,15 @@
 import * as storage from "../utils/storage.js";
 import * as client from "./client.js";
 
-/**
- * @param {{ email: string, password: string }} credentials
- */
-export async function login(credentials) {
+/** @param {{ email: string, password: string }} cred */
+export async function login(cred) {
   const data = await client.post(
     "/api/auth/login",
-    { email: credentials.email, password: credentials.password },
-    {
-      auth: false,
-    }
+    { email: cred.email, password: cred.password },
+    { auth: false }
   );
-  if (data && data.token) storage.set("token", data.token);
-  if (data && data.user) storage.set("user", JSON.stringify(data.user));
+  if (data?.token) storage.set("token", data.token);
+  if (data?.user) storage.set("user", JSON.stringify(data.user));
   return data;
 }
 
@@ -21,7 +17,7 @@ export async function logout() {
   try {
     await client.post("/api/auth/logout", {}, { auth: true });
   } catch {
-    /* still clear local session */
+    /* ok */
   }
   storage.remove("token");
   storage.remove("user");
@@ -29,7 +25,7 @@ export async function logout() {
 
 export async function getCurrentUser() {
   const data = await client.get("/api/auth/me");
-  if (data && data.user) storage.set("user", JSON.stringify(data.user));
+  if (data?.user) storage.set("user", JSON.stringify(data.user));
   return data?.user ?? null;
 }
 

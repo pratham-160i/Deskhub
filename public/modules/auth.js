@@ -1,54 +1,50 @@
 import * as auth from "../api/auth.js";
 
 const form = document.getElementById("login-form");
-const errorEl = document.getElementById("login-error");
+const errEl = document.getElementById("login-error");
 
-const dashboardHref = window.location.pathname.includes("/public/")
-  ? "./dashboard.html"
-  : "./public/dashboard.html";
-
-function showError(message) {
-  if (!errorEl) return;
-  errorEl.textContent = message;
-  errorEl.hidden = false;
+function show(msg) {
+  if (!errEl) return;
+  errEl.textContent = msg;
+  errEl.hidden = false;
 }
 
-function clearError() {
-  if (!errorEl) return;
-  errorEl.textContent = "";
-  errorEl.hidden = true;
+function hide() {
+  if (!errEl) return;
+  errEl.textContent = "";
+  errEl.hidden = true;
 }
 
 if (auth.isAuthenticated()) {
-  window.location.replace(dashboardHref);
+  location.replace("./dashboard.html");
 }
 
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    clearError();
-
-    const emailInput = /** @type {HTMLInputElement | null} */ (
-      form.querySelector('[name="email"]')
-    );
-    const email = (emailInput?.value ?? "").trim();
-    const password = /** @type {HTMLInputElement} */ (
-      form.querySelector('[name="password"]')
-    ).value;
+    hide();
+    const email = (
+      /** @type {HTMLInputElement} */ (form.querySelector('[name="email"]'))
+    ).value
+      .trim()
+      .toLowerCase();
+    const password = (
+      /** @type {HTMLInputElement} */ (form.querySelector('[name="password"]'))
+    ).value.trim();
 
     try {
       await auth.login({ email, password });
-      window.location.assign(dashboardHref);
-    } catch (err) {
-      const submit = /** @type {HTMLButtonElement | null} */ (
-        document.getElementById("login-submit")
-      );
-      if (submit) submit.disabled = false;
-      const msg =
-        err && typeof err.message === "string"
-          ? err.message
+      location.assign("./dashboard.html");
+    } catch (ex) {
+      const m =
+        ex && typeof ex === "object" && "message" in ex
+          ? String(/** @type {{message:string}} */ (ex).message)
           : "Sign-in failed.";
-      showError(msg);
+      if (/failed to fetch/i.test(m)) {
+        show("Cannot reach API. Run: npm run dev");
+      } else {
+        show(m);
+      }
     }
   });
 }

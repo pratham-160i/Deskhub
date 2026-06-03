@@ -5,46 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard — Deskhub</title>
     <style>
-      :root {
-        font-family: system-ui, sans-serif;
-        color-scheme: light dark;
-      }
       body {
-        margin: 2rem;
-        line-height: 1.5;
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
       }
     </style>
   </head>
   <body>
     <h1>Dashboard</h1>
-    <p>You are signed in.</p>
+    <p>Placeholder home after login.</p>
     <p><a href="./tickets.html">Tickets</a></p>
-    <p><a href="./index.html" id="dashboard-sign-out">Sign out</a></p>
+    <p><a href="./index.html" id="out">Sign out</a></p>
     <script type="module">
       import * as storage from "./utils/storage.js";
       import * as auth from "./api/auth.js";
-      const raw = storage.get("user");
+
       if (!storage.get("token")) {
-        window.location.replace("./index.html");
-      } else if (raw) {
-        try {
-          const user = JSON.parse(raw);
-          const p = document.createElement("p");
-          const who =
-            typeof user.email === "string" && user.email
-              ? user.email
-              : (user.username ?? "user");
-          p.textContent = `Signed in as ${who}.`;
-          document.querySelector("h1").after(p);
-        } catch {
-          /* ignore */
-        }
+        location.replace("./index.html");
       }
 
-      document.getElementById("dashboard-sign-out")?.addEventListener("click", async (e) => {
+      document.getElementById("out")?.addEventListener("click", async (e) => {
         e.preventDefault();
         await auth.logout();
-        window.location.assign("./index.html");
+        location.assign("./index.html");
       });
     </script>
   </body>

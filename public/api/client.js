@@ -1,41 +1,43 @@
-const API_BASE = "http://localhost:3040";
-
 import * as storage from "../utils/storage.js";
 
+function apiBase() {
+  if (typeof window === "undefined") return "http://localhost:3040";
+  const { protocol, hostname } = window.location;
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return `${protocol}//${hostname}:3040`;
+  }
+  return "http://localhost:3040";
+}
+
+const API_BASE = apiBase();
+
 async function parseBody(res) {
-  const text = await res.text();
-  if (!text) return null;
+  const t = await res.text();
+  if (!t) return null;
   try {
-    return JSON.parse(text);
+    return JSON.parse(t);
   } catch {
-    return text;
+    return t;
   }
 }
 
 /**
  * @param {string} method
- * @param {string} path - path starting with /api/...
- * @param {{ body?: unknown, headers?: Record<string,string>, auth?: boolean }} [options]
+ * @param {string} path
+ * @param {{ body?: unknown, headers?: Record<string,string>, auth?: boolean }} [opts]
  */
-export async function request(method, path, options = {}) {
-  const { body, headers = {}, auth = true } = options;
-  const url = path.startsWith("http") ? path : `${API_BASE}${path}`;
-
-  const reqHeaders = { ...headers };
-  if (body !== undefined && !reqHeaders["Content-Type"]) {
-    reqHeaders["Content-Type"] = "application/json";
-  }
-
+export async function request(method, path, opts = {}) {
+  const { body, headers = {}, auth = true } = opts;
+  const url = path.startsWith("http") ? path : API_BASE + path;
+  const h = { ...headers };
+  if (body !== undefined && !h["Content-Type"]) h["Content-Type"] = "application/json";
   if (auth) {
     const token = storage.get("token");
-    if (typeof token === "string" && token) {
-      reqHeaders.Authorization = `Bearer ${token}`;
-    }
+    if (token) h.Authorization = "Bearer " + token;
   }
-
   const res = await fetch(url, {
     method,
-    headers: reqHeaders,
+    headers: h,
     body:
       body === undefined
         ? undefined
@@ -43,31 +45,27 @@ export async function request(method, path, options = {}) {
           ? body
           : JSON.stringify(body),
   });
-
   const data = await parseBody(res);
   if (!res.ok) {
-    const err = new Error(
-      (data && data.message) || res.statusText || "Request failed"
-    );
+    const err = new Error((data && data.message) || res.statusText || "Error");
     err.status = res.status;
-    err.body = data;
     throw err;
   }
   return data;
 }
 
-export function get(path, options) {
-  return request("GET", path, { ...options, body: undefined });
+export function get(path, opts) {
+  return request("GET", path, { ...opts, body: undefined });
 }
 
-export function post(path, body, options) {
-  return request("POST", path, { ...options, body });
+export function post(path, body, opts) {
+  return request("POST", path, { ...opts, body });
 }
 
-export function patch(path, body, options) {
-  return request("PATCH", path, { ...options, body });
+export function patch(path, body, opts) {
+  return request("PATCH", path, { ...opts, body });
 }
 
-export function del(path, options) {
-  return request("DELETE", path, { ...options, body: undefined });
+export function del(path, opts) {
+  return request("DELETE", path, { ...opts, body: undefined });
 }

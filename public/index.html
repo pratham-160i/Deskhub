@@ -5,110 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sign in — Deskhub</title>
     <style>
-      :root {
-        color-scheme: light dark;
-        --bg: #0f1419;
-        --panel: #1a2332;
-        --border: #2d3a4d;
-        --text: #e8eef5;
-        --muted: #9aa8bc;
-        --accent: #3b82f6;
-        --danger: #f87171;
-        --radius: 10px;
-        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
-      }
-      @media (prefers-color-scheme: light) {
-        :root {
-          --bg: #f4f6f9;
-          --panel: #ffffff;
-          --border: #d5dde8;
-          --text: #111827;
-          --muted: #5b6472;
-        }
-      }
-      * {
-        box-sizing: border-box;
-      }
       body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: var(--bg);
-        color: var(--text);
-      }
-      main {
-        width: 100%;
-        max-width: 400px;
-        padding: 1.5rem;
+        font-family: system-ui, sans-serif;
+        max-width: 22rem;
+        margin: 3rem auto;
+        padding: 0 1rem;
       }
       h1 {
-        font-size: 1.35rem;
-        font-weight: 600;
-        margin: 0 0 0.25rem;
-      }
-      .subtitle {
-        color: var(--muted);
-        font-size: 0.9rem;
-        margin: 0 0 1.5rem;
-      }
-      form {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 1.25rem 1.25rem 1rem;
-      }
-      fieldset {
-        border: 0;
-        margin: 0;
-        padding: 0;
-      }
-      legend {
-        padding: 0;
-        margin-bottom: 1rem;
-        font-weight: 600;
-        font-size: 1rem;
+        font-size: 1.25rem;
       }
       label {
         display: block;
-        font-size: 0.85rem;
-        margin-bottom: 0.35rem;
-        color: var(--muted);
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
       }
       input {
         width: 100%;
-        padding: 0.55rem 0.65rem;
-        margin-bottom: 1rem;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        background: transparent;
-        color: inherit;
-        font: inherit;
-      }
-      input:focus {
-        outline: 2px solid var(--accent);
-        outline-offset: 1px;
-      }
-      button[type="submit"] {
-        width: 100%;
+        box-sizing: border-box;
         margin-top: 0.25rem;
-        padding: 0.65rem 1rem;
-        border: 0;
-        border-radius: 6px;
-        background: var(--accent);
-        color: #fff;
-        font: inherit;
-        font-weight: 600;
-        cursor: pointer;
+        padding: 0.4rem;
       }
-      button[type="submit"]:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
+      button {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 0.5rem;
       }
-      .error {
-        color: var(--danger);
-        font-size: 0.875rem;
-        margin: 0 0 0.75rem;
+      .err {
+        color: #b00020;
+        margin-top: 0.75rem;
         min-height: 1.25em;
       }
     </style>
@@ -116,32 +40,26 @@
   <body>
     <main>
       <h1>Deskhub</h1>
-      <p class="subtitle">Sign in to continue</p>
-      <form id="login-form" method="post" action="#" autocomplete="on" novalidate>
-        <fieldset>
-          <legend>Account credentials</legend>
-          <p id="login-error" class="error" role="alert" hidden></p>
-          <label for="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="username"
-            inputmode="email"
-            required
-            minlength="3"
-          />
-          <label for="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            minlength="1"
-          />
-          <button type="submit" id="login-submit">Sign in</button>
-        </fieldset>
+      <p>Sign in</p>
+      <form id="login-form" method="post" action="#" novalidate>
+        <p id="login-error" class="err" role="alert" hidden></p>
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          required
+        />
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
+        <button type="submit" id="login-submit">Sign in</button>
       </form>
     </main>
     <script type="module" src="./modules/auth.js"></script>
