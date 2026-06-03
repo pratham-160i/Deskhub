@@ -1,5 +1,6 @@
 import * as storage from "../utils/storage.js";
 import * as ticketsApi from "../api/tickets.js";
+import * as auth from "../api/auth.js";
 import * as formatDate from "../utils/formatDate.js";
 import { showLoading, hideLoading } from "../utils/ui.js";
 
@@ -274,6 +275,12 @@ export function initTicketsList() {
 
   retry?.addEventListener("click", () => {
     void refresh();
+  });
+
+  document.getElementById("tickets-sign-out")?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await auth.logout();
+    window.location.assign("./index.html");
   });
 
   readParamsFromDom();

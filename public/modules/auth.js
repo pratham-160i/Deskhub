@@ -40,6 +40,10 @@ if (form) {
       await auth.login({ email, password });
       window.location.assign(dashboardHref);
     } catch (err) {
+      const submit = /** @type {HTMLButtonElement | null} */ (
+        document.getElementById("login-submit")
+      );
+      if (submit) submit.disabled = false;
       const msg =
         err && typeof err.message === "string"
           ? err.message
