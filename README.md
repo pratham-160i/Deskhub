@@ -33,6 +33,11 @@ npm install
 npm run dev
 ```
 
+Then open **`http://localhost:3055/`** (root) or **`http://localhost:3055/public/index.html`**. Demo login (change in `server/index.js` for production):
+
+- **Email:** `pratham.bankar@g10x.com`
+- **Password:** `PrathamBankar@1604`
+
 ## If you must use the website upload
 
 Only select these paths (not `node_modules`): `.gitignore`, `package.json`, `package-lock.json`, `README.md`, `index.html`, `public/`, `server/`. That stays under GitHub’s per-upload limit.

@@ -2,12 +2,16 @@ import * as storage from "../utils/storage.js";
 import * as client from "./client.js";
 
 /**
- * @param {{ username: string, password: string }} credentials
+ * @param {{ email: string, password: string }} credentials
  */
 export async function login(credentials) {
-  const data = await client.post("/api/auth/login", credentials, {
-    auth: false,
-  });
+  const data = await client.post(
+    "/api/auth/login",
+    { email: credentials.email, password: credentials.password },
+    {
+      auth: false,
+    }
+  );
   if (data && data.token) storage.set("token", data.token);
   if (data && data.user) storage.set("user", JSON.stringify(data.user));
   return data;

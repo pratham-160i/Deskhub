@@ -24,20 +24,35 @@ function bearerToken(req) {
 }
 
 /** Demo credentials — change in production */
-const VALID = { username: "admin", password: "secret123" };
+const VALID = {
+  email: "pratham.bankar@g10x.com",
+  password: "PrathamBankar@1604",
+};
 
 app.post("/api/auth/login", (req, res) => {
-  const { username, password } = req.body || {};
+  const body = req.body || {};
+  const password = typeof body.password === "string" ? body.password : "";
+  const emailRaw =
+    typeof body.email === "string"
+      ? body.email.trim()
+      : typeof body.username === "string"
+        ? body.username.trim()
+        : "";
+  const email = emailRaw.toLowerCase();
   if (
-    typeof username !== "string" ||
+    !email ||
     typeof password !== "string" ||
-    username !== VALID.username ||
+    email !== VALID.email.toLowerCase() ||
     password !== VALID.password
   ) {
-    return res.status(401).json({ message: "Invalid username or password." });
+    return res.status(401).json({ message: "Invalid email or password." });
   }
   const token = crypto.randomBytes(32).toString("hex");
-  const user = { id: "1", username: VALID.username };
+  const user = {
+    id: "1",
+    email: VALID.email,
+    username: VALID.email.split("@")[0] || "User",
+  };
   sessions.set(token, user);
   return res.json({ token, user });
 });

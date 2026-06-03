@@ -153,7 +153,7 @@ function escapeHtml(s) {
 
 export async function refresh() {
   if (!storage.get("token")) {
-    window.location.replace("../index.html");
+    window.location.replace("./index.html");
     return;
   }
 
@@ -211,7 +211,7 @@ export async function refresh() {
       /** @type {{ status?: number }} */ (err).status === 401
     ) {
       setTimeout(() => {
-        window.location.replace("../index.html");
+        window.location.replace("./index.html");
       }, 1600);
     }
   }
@@ -229,7 +229,7 @@ function scheduleSearchRefresh() {
 
 export function initTicketsList() {
   if (!storage.get("token")) {
-    window.location.replace("../index.html");
+    window.location.replace("./index.html");
     return;
   }
 
