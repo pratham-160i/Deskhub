@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const crypto = require("crypto");
+const { createTicketsRouter } = require("./tickets");
 
 const PORT = process.env.PORT || 3040;
 const app = express();
@@ -58,6 +59,17 @@ app.post("/api/auth/logout", (req, res) => {
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "api" });
 });
+
+function requireAuth(req, res, next) {
+  const token = bearerToken(req);
+  if (!token || !sessions.has(token)) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  req.user = sessions.get(token);
+  next();
+}
+
+app.use("/api/tickets", createTicketsRouter({ requireAuth }));
 
 app.listen(PORT, () => {
   console.log(`API listening on http://localhost:${PORT}`);
