@@ -2,6 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      (function () {
+        var path = location.pathname.replace(/\/+/g, "/");
+        if (!path.endsWith("/")) {
+          var tail = path.split("/").pop() || "";
+          if (/\.[a-z0-9]+$/i.test(tail)) {
+            path = path.replace(/\/[^/]+$/i, "/");
+          } else {
+            path = path + "/";
+          }
+        }
+        var b = document.createElement("base");
+        b.href = location.origin + (path === "/" ? "/" : path);
+        document.head.insertBefore(b, document.head.firstChild);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sign in — Deskhub</title>
     <style>

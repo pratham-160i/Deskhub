@@ -21,7 +21,7 @@ After login you see the ticket list (dashboard). Keep `npm run dev` running whil
 
 GitHub Pages only hosts **static files** — the Node API on port **3040 does not run there**.
 
-For **`github.io` / `github.dev`** hosts, the app uses a **small in-browser mock** (same demo email/password and the same ticket list behaviour) stored in **localStorage**. Sign-in and tickets work without `localhost`.
+For **`github.io` / `github.dev`** hosts, the app uses a **small in-browser mock** built into **`public/api/client.js`** (same demo email/password and ticket behaviour) stored in **localStorage**. Sign-in and tickets work without `localhost`. HTML pages inject a **`<base href>`** so script URLs still resolve when you open a project URL **without** a trailing slash (e.g. `…/Deskhub` vs `…/Deskhub/`).
 
 **Optional:** To use a real API on Pages, deploy the Express server (e.g. Render, Railway) and set the base URL in **`public/config.js`**:
 
