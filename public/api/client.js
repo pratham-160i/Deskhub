@@ -1,12 +1,16 @@
 import * as storage from "../utils/storage.js";
+import { shouldUseGithubMock, mockRequest } from "./mockGithubPages.js";
 
 function apiBase() {
+  if (typeof window !== "undefined" && window.DESKHUB_API_BASE) {
+    return String(window.DESKHUB_API_BASE).replace(/\/$/, "");
+  }
   if (typeof window === "undefined") return "http://localhost:3040";
   const { protocol, hostname } = window.location;
   if (hostname === "localhost" || hostname === "127.0.0.1") {
     return `${protocol}//${hostname}:3040`;
   }
-  return "http://localhost:3040";
+  return "";
 }
 
 const API_BASE = apiBase();
@@ -27,8 +31,17 @@ async function parseBody(res) {
  * @param {{ body?: unknown, headers?: Record<string,string>, auth?: boolean }} [opts]
  */
 export async function request(method, path, opts = {}) {
-  const { body, headers = {}, auth = true } = opts;
-  const url = path.startsWith("http") ? path : API_BASE + path;
+  if (shouldUseGithubMock()) {
+    const data = await mockRequest(method, path, opts || {});
+    if (data === null && method === "POST" && path === "/api/auth/logout") {
+      return undefined;
+    }
+    return data;
+  }
+
+  const base = API_BASE || "http://localhost:3040";
+  const { body, headers = {}, auth = true } = opts || {};
+  const url = path.startsWith("http") ? path : base + path;
   const h = { ...headers };
   if (body !== undefined && !h["Content-Type"]) h["Content-Type"] = "application/json";
   if (auth) {
@@ -47,9 +60,9 @@ export async function request(method, path, opts = {}) {
   });
   const data = await parseBody(res);
   if (!res.ok) {
-    const err = new Error((data && data.message) || res.statusText || "Error");
-    err.status = res.status;
-    throw err;
+    const e = new Error((data && data.message) || res.statusText || "Error");
+    e.status = res.status;
+    throw e;
   }
   return data;
 }
